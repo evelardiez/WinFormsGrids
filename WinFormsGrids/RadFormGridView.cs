@@ -1,22 +1,10 @@
 ﻿using System;
-using System.Configuration;
 using System.Data;
-using System.Data.OleDb;
-using System.Windows.Forms;
 
 namespace TelerikWinFormsAppGrid
 {
-    public partial class RadFormGridView : Telerik.WinControls.UI.RadForm
+    public partial class RadFormGridView : RadFormBase
     {
-
-        private string connectionString = ConfigurationManager.ConnectionStrings["NwindConnectionString"].ConnectionString;
-        private string tableName = "Customers";
-
-        private OleDbDataAdapter dataAdapter = new OleDbDataAdapter();
-        private DataTable dataTable = new DataTable();
-        private BindingSource bindingSource = new BindingSource();
-
-
         public RadFormGridView()
         {
             InitializeComponent();
@@ -30,22 +18,6 @@ namespace TelerikWinFormsAppGrid
             this.dataGridView1.AutoResizeColumns();
 
             GetData();
-        }
-
-        private void GetData()
-        {
-            var queryString = $"SELECT * from {tableName}";
-
-            var connection = new OleDbConnection(connectionString);
-
-            dataAdapter = new OleDbDataAdapter(queryString, connectionString);
-
-            var commandBuilder = new OleDbCommandBuilder(dataAdapter);
-
-            dataTable = new DataTable();
-
-            dataAdapter.Fill(dataTable);
-            bindingSource.DataSource = dataTable;
         }
 
         private void button1_Click(object sender, EventArgs e)

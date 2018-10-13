@@ -71,6 +71,9 @@
     <Compile Include="RadFormRadGrid.Designer.cs">
       <DependentUpon>RadFormRadGrid.cs</DependentUpon>
     </Compile>
+    <Compile Include="RadFormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
