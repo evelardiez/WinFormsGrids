@@ -14,7 +14,7 @@ namespace TelerikWinFormsAppGrid
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new RadFormRadGrid());
+            Application.Run(new RadFormGridView());
         }
     }
 }

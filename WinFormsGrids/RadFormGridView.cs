@@ -1,17 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Data.OleDb;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using Telerik.WinControls;
 
 namespace TelerikWinFormsAppGrid
 {
     public partial class RadFormGridView : Telerik.WinControls.UI.RadForm
     {
+
+        private string connectionString = ConfigurationManager.ConnectionStrings["NwindConnectionString"].ConnectionString;
+        private string tableName = "Customers";
+
+        private OleDbDataAdapter dataAdapter = new OleDbDataAdapter();
+        private DataTable dataTable = new DataTable();
+        private BindingSource bindingSource = new BindingSource();
+
+
         public RadFormGridView()
         {
             InitializeComponent();
@@ -19,31 +24,44 @@ namespace TelerikWinFormsAppGrid
 
         private void RadForm1_Load(object sender, EventArgs e)
         {
-            var connectionString =
-                System.Configuration.ConfigurationManager.
-                ConnectionStrings["NwindConnectionString"].ConnectionString;
+            bindingSource.DataSource = dataTable;
+
+            this.dataGridView1.DataSource = bindingSource;
+            this.dataGridView1.AutoResizeColumns();
+
+            GetData();
+        }
+
+        private void GetData()
+        {
+            var queryString = $"SELECT * from {tableName}";
 
             var connection = new OleDbConnection(connectionString);
 
-            connection.Open();
+            dataAdapter = new OleDbDataAdapter(queryString, connectionString);
 
-            string queryString = "SELECT * from Employees";
+            var commandBuilder = new OleDbCommandBuilder(dataAdapter);
 
-            var adapter = new OleDbDataAdapter(queryString, connection);
+            dataTable = new DataTable();
 
-            var dtAccess = new DataTable();
-            var bindingSource = new BindingSource();
-            bindingSource.DataMember = "Employees";
-            bindingSource.DataSource = dtAccess;
+            dataAdapter.Fill(dataTable);
+            bindingSource.DataSource = dataTable;
+        }
 
-            this.dataGridView1.DataSource = bindingSource;
+        private void button1_Click(object sender, EventArgs e)
+        {
+            GetData();
+        }
 
-            using (new OleDbCommandBuilder(adapter))
-            {
-                adapter.Fill(dtAccess);
-            }
+        private void button2_Click(object sender, EventArgs e)
+        {
 
-            this.dataGridView1.AutoResizeColumns();
+            dataAdapter.Update((DataTable)bindingSource.DataSource);
+
+            //var builder = new OleDbCommandBuilder(adapter);
+            //var updateCommand = builder.GetUpdateCommand();
+
+            //adapter.Update(dataTable);
         }
     }
 }
